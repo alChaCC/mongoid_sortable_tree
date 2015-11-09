@@ -13,3 +13,18 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
+group :test do
+  gem "minitest-rails"
+  gem "minitest-rails-capybara"
+  gem 'simplecov', :require => false
+  gem "minitest-reporters"
+  gem 'minitest-spec-rails'
+  gem 'selenium-webdriver', '~> 2.47.1'
+end
+
+group :development, :test do 
+  gem 'byebug'
+  gem 'pry-byebug'
+  gem 'factory_girl'
+  gem 'factory_girl_rails'
+end
