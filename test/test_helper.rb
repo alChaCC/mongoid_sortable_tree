@@ -9,7 +9,7 @@ require "minitest/rails"
 require 'simplecov'
 SimpleCov.start 'rails'
 require "minitest/reporters"
-Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
+Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(:color => true)]
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
