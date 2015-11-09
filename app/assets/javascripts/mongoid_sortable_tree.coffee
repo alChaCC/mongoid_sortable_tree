@@ -47,7 +47,7 @@ jQuery ->
                   target: target
                   node: node
                   node_parent: node_parent
-              ).then (data, textStatus, jqXHR) -> 
+              ).then((data, textStatus, jqXHR) -> 
                 if textStatus == 'success'
                   if data.operation == 'create_node'
                     new_node_id = $('#'+this.node_parent.id).find("input[value='"+this.node.text+"']").closest('li').attr('id')
@@ -57,8 +57,9 @@ jQuery ->
                     # new_node_id = $('#'+this.node_parent.id).find("a:contains('"+ this.node.text+"')").closest('li').attr('id')
                     # $.jstree.reference(this.target).set_id(new_node_id,data.id)
                   true
-                else
-                  false
+              ).fail ->
+                $.jstree.reference(this.target).refresh()
+                false
             'themes': 'stripes': true
           'dnd':
             'check_while_dragging': false 

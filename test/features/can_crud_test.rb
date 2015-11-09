@@ -17,4 +17,58 @@ class CanCrudTest < Capybara::Rails::TestCase
     page.must_have_content('Edit')
     page.must_have_content('Rename')
   end
+
+  it "can create a node under parent", js: true do
+    find_by_id("#{@root.id.to_s}").right_click
+    assert_difference 'Tag.count' do
+      find_link('Create').click
+      sleep 2
+    end
+    page.must_have_xpath("//input[@value='New node']")
+  end
+
+  it "can rename a node", js: true do
+    find_by_id("#{@root.id.to_s}").right_click
+    find_link('Rename').click
+    find(:xpath, "//input[@value='root']").set('root_hello')
+    find(:xpath, "//input[@value='root']").native.send_keys(:return)
+    page.must_have_content('root_hello')
+    sleep 2
+    assert_equal 'root_hello', @root.reload.text
+  end
+
+  it "can delete a node", js: true do
+    find_by_id("#{@root.id.to_s}").find('a').double_click
+    find_by_id("#{@child_1.id.to_s}").right_click
+    assert_difference 'Tag.count', -1 do
+      find_link('Delete').click
+      sleep 2
+    end
+    page.wont_have_content('root_child1')
+  end  
+
+  it "can move a node from A to B", js: true do 
+    find_by_id("#{@root.id.to_s}").find('a').double_click
+    find_by_id("#{@child_1.id.to_s}").find('a').double_click
+    draggable = find_by_id("#{@children_1.id.to_s}").find('a')
+    droppable = find_by_id("#{@child_2.id.to_s}").find('a')
+    draggable.drag_to(droppable)
+    sleep 2
+    assert_equal @child_2,@children_1.reload.parent
+  end
+
+  it "can copy a node from A to B", js: true do 
+    find_by_id("#{@root.id.to_s}").find('a').double_click
+    find_by_id("#{@child_1.id.to_s}").find('a').double_click
+    find_by_id("#{@children_1.id.to_s}").right_click
+    find_link('Edit').click
+    find_link('Copy').click
+    find_by_id("#{@child_2.id.to_s}").right_click
+    find_link('Edit').click
+    assert_difference 'Tag.count' do
+      find_link('Paste').click
+      sleep 2
+    end
+  end
+
 end
