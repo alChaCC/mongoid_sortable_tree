@@ -12,7 +12,12 @@ gemspec
 
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
-
+gem 'bootstrap-sass'
+# Use Uglifier as compressor for JavaScript assets
+gem 'jquery-rails'
+gem 'coffee-rails', '~> 4.1.0'
+gem 'sass-rails'
+gem "jstree-rails-4"
 group :test do
   gem "minitest-rails"
   gem "minitest-rails-capybara"
@@ -20,6 +25,7 @@ group :test do
   gem "minitest-reporters"
   gem 'minitest-spec-rails'
   gem 'selenium-webdriver', '~> 2.47.1'
+  gem "chromedriver-helper"
 end
 
 group :development, :test do 

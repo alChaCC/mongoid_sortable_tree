@@ -7,6 +7,7 @@ require 'mongoid'
 require 'mongoid/tree'
 require "minitest/rails"
 require 'simplecov'
+require "minitest/rails/capybara"
 SimpleCov.start 'rails'
 require "minitest/reporters"
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(:color => true)]
@@ -25,6 +26,10 @@ if ActiveSupport::TestCase.respond_to?(:fixture_path=)
 end
 
 Mongoid.load!("test/dummy/config/mongoid.yml", Rails.env.to_sym)
+
+Capybara.register_driver :selenium do |app|
+  Capybara::Selenium::Driver.new(app, :browser => :chrome)
+end
 
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods

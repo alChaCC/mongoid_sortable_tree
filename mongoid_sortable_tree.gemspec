@@ -20,4 +20,5 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 4.2.4"
   s.add_development_dependency "mongoid"
   s.add_development_dependency "mongoid-tree"
+  s.add_development_dependency "jstree-rails-4"
 end
