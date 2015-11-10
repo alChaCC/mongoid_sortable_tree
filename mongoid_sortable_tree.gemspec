@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = MongoidSortableTree::VERSION
   s.authors     = ["Aloha Chen"]
   s.email       = ["y.alohac@gmail.com"]
-  s.homepage    = "https://github.com/alChaCC/mongoid-sortable-tree"
+  s.homepage    = "https://github.com/alChaCC/mongoid_sortable_tree"
   s.summary     = %q{Drag and Drop GUI for mongoid-tree using jstree.}
   s.description = %q{A GUI helper for mongoid-tree(used the materialized path pattern)}
   s.license     = "MIT"
