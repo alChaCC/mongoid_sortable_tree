@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mongoid_sortable_tree (0.0.1)
+    mongoid_sortable_tree (0.0.2)
       rails (~> 4.2.4)
 
 GEM
