@@ -110,7 +110,7 @@ Add these lines to `config/routes.rb`
 ```ruby
 resources :tags do 
   collection do 
-    get 'check'
+    post 'check'
   end
 end
 ```

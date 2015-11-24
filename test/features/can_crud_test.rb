@@ -18,6 +18,14 @@ class CanCrudTest < Capybara::Rails::TestCase
     page.must_have_content('Rename')
   end
 
+  it "can create a root node by javascript", js: true do 
+    assert_difference 'Tag.count' do
+      find_by_id("add-root-node").click
+      sleep 2
+    end
+    page.must_have_content("test_add_root")
+  end
+
   it "can create a node under parent", js: true do
     find_by_id("#{@root.id.to_s}").right_click
     assert_difference 'Tag.count' do

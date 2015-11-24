@@ -9,6 +9,8 @@ jQuery ->
         destroy_url: '/tags'
         index_url: '/tags'
         check_url: '/tags/check'
+        _new_node_id: ''
+        _target: ''
 
       mregeSettings: (optsArr) ->
         setting = @default_setting
@@ -25,14 +27,12 @@ jQuery ->
           idx++
         setting
 
-      create: (parent_id,text) -> 
-        $.ajax
-          url: @default_setting.create_url
-          data: { "text": data, "parent_id": parent_id}
-          type: 'POST'
-
+      create_node: (parent_node,node,position,callback,is_loaded) -> 
+        $.jstree.reference(this.default_setting._target).create_node(parent_node,node,position,callback,is_loaded)
+      
       init: (target,args) ->
         settings = @mregeSettings(args)
+        settings._target = target
         $(target).jstree
           'core':
             'animation': 0
@@ -43,19 +43,17 @@ jQuery ->
                 $.ajax
                   url: settings.check_url
                   data: { "operation": operation, "node": node, "node_parent": node_parent, "info": info}
-                  type: 'GET'
+                  type: 'POST'
                   target: target
                   node: node
                   node_parent: node_parent
               ).then((data, textStatus, jqXHR) -> 
                 if textStatus == 'success'
                   if data.operation == 'create_node'
-                    new_node_id = $('#'+this.node_parent.id).find("input[value='"+this.node.text+"']").closest('li').attr('id')
+                    new_node_id = $('#'+settings._new_node_id)
                     $.jstree.reference(this.target).set_id(new_node_id,data.id)
                   if data.operation == 'copy_node'
                     location.reload()
-                    # new_node_id = $('#'+this.node_parent.id).find("a:contains('"+ this.node.text+"')").closest('li').attr('id')
-                    # $.jstree.reference(this.target).set_id(new_node_id,data.id)
                   true
               ).fail ->
                 $.jstree.reference(this.target).refresh()
@@ -71,3 +69,5 @@ jQuery ->
             'wholerow'
             'changed'
           ]
+        $(target).on 'create_node.jstree', (event,data) ->
+          settings._new_node_id = data.node.id
