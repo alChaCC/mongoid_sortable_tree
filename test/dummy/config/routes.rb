@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resources :tags do 
     collection do 
-      get 'check'
+      post 'check'
     end
   end
   # The priority is based upon order of creation: first created -> highest priority.
