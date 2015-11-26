@@ -65,6 +65,8 @@ module MongoidSortableTreeController
       variable  = self.instance_variable_set(variable, klass.where(:id => node[:id]).first)
       parent = klass.where(:id => node_parent[:id]).first
       if variable && variable.update_attribute(:parent_id,parent.try(:id))
+        variable.rearrange_children!
+        variable.save
         return {id: variable.id.to_s, msg: 'moved', status: 200}
       else
         return {id: variable.id.to_s, msg: variable.errors.full_messages, status: 406}
@@ -85,6 +87,8 @@ module MongoidSortableTreeController
           elsif id_mapping[copied_item.parent_id]
             copied_item.update_attribute(:parent_id,id_mapping[copied_item.parent_id])
           end
+          copied_item.rearrange_children!
+          copied_item.save
         end
         return {id: id_mapping.keys.map(&:to_s), msg: 'cpoied', status: 200}
       rescue => e 
