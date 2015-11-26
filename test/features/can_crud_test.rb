@@ -2,6 +2,10 @@ require "test_helper"
 
 class CanCrudTest < Capybara::Rails::TestCase
   before do 
+    #  root
+    #     => root_child1
+    #       => root_child1_children1 
+    #     => root_child2 
     @root   = create(:tag, text: 'root', icon: 'root_icon', li_attr: 'root_li', a_attr: 'root_a')
     @child_1  = create(:tag, text: 'root_child1', li_attr: "class='hello'")
     @child_2  = create(:tag, text: 'root_child2', a_attr: "id='hello'")
@@ -65,6 +69,15 @@ class CanCrudTest < Capybara::Rails::TestCase
     assert_equal @child_2,@children_1.reload.parent
   end
 
+  it "will update all descendants when move from A to B", js: true do 
+    find_by_id("#{@root.id.to_s}").find('a').double_click
+    draggable = find_by_id("#{@child_1.id.to_s}").find('a')
+    droppable = find_by_id("#{@child_2.id.to_s}").find('a')
+    draggable.drag_to(droppable)
+    sleep 2
+    assert_equal "root,root_child2,root_child1,root_child1_children1", @children_1.reload.ancestors_and_self.map(&:text).join(',')
+  end
+
   it "can copy a node from A to B", js: true do 
     find_by_id("#{@root.id.to_s}").find('a').double_click
     find_by_id("#{@child_1.id.to_s}").find('a').double_click
@@ -77,6 +90,20 @@ class CanCrudTest < Capybara::Rails::TestCase
       find_link('Paste').click
       sleep 2
     end
+  end
+
+   it "will update all descendants when copy a node from A to B", js: true do 
+    find_by_id("#{@root.id.to_s}").find('a').double_click
+    find_by_id("#{@child_1.id.to_s}").find('a').right_click
+    find_link('Edit').click
+    find_link('Copy').click
+    find_by_id("#{@child_2.id.to_s}").right_click
+    find_link('Edit').click
+    find_link('Paste').click
+    sleep 2
+    new_children_1 = Tag.where(:id.nin => [@children_1], :text => 'root_child1_children1').first
+    assert_equal "root,root_child2,root_child1,root_child1_children1", new_children_1.ancestors_and_self.map(&:text).join(',')
+    assert_equal "root,root_child1,root_child1_children1", @children_1.ancestors_and_self.map(&:text).join(',')
   end
 
 end
